@@ -43,6 +43,10 @@ const writeData = async (filePath, data) => {
     }
 };
 
+app.get('/', (req, res) => {
+    res.send('Hello World!')
+})
+
 // --- 3. BOOKS ENDPOINTS ---
 
 // GET /api/books/featured
@@ -63,7 +67,7 @@ app.get('/api/books/search', async (req, res) => {
         if (!query) return res.status(400).json({ error: "Query parameter 'q' is required" });
 
         const data = await readData(BOOKS_FILE);
-        const results = data.books.filter(book => 
+        const results = data.books.filter(book =>
             book.title.toLowerCase().includes(query) ||
             book.author.toLowerCase().includes(query) ||
             book.tags.some(tag => tag.toLowerCase().includes(query))
@@ -89,7 +93,7 @@ app.get('/api/books/:id', async (req, res) => {
     try {
         const data = await readData(BOOKS_FILE);
         const book = data.books.find(b => b.id === req.params.id);
-        
+
         if (!book) return res.status(404).json({ message: 'Book not found' });
         res.json(book);
     } catch (err) {
@@ -101,7 +105,7 @@ app.get('/api/books/:id', async (req, res) => {
 app.post('/api/books', async (req, res) => {
     try {
         const data = await readData(BOOKS_FILE);
-        
+
         // Auto-increment Logic
         const ids = data.books.map(book => parseInt(book.id));
         const maxId = ids.length > 0 ? Math.max(...ids) : 0;
@@ -112,10 +116,10 @@ app.post('/api/books', async (req, res) => {
             ...req.body,
             datePublished: req.body.datePublished || new Date().toISOString().split('T')[0]
         };
-        
+
         data.books.push(newBook);
         await writeData(BOOKS_FILE, data);
-        
+
         res.status(201).json(newBook);
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -127,15 +131,15 @@ app.put('/api/books/:id', async (req, res) => {
     try {
         const data = await readData(BOOKS_FILE);
         const index = data.books.findIndex(b => b.id === req.params.id);
-        
+
         if (index === -1) return res.status(404).json({ message: 'Book not found' });
-        
-        data.books[index] = { 
-            ...data.books[index], 
-            ...req.body, 
+
+        data.books[index] = {
+            ...data.books[index],
+            ...req.body,
             id: req.params.id // Prevent ID modification
         };
-        
+
         await writeData(BOOKS_FILE, data);
         res.json(data.books[index]);
     } catch (err) {
@@ -149,11 +153,11 @@ app.delete('/api/books/:id', async (req, res) => {
         const data = await readData(BOOKS_FILE);
         const initialLength = data.books.length;
         const filteredBooks = data.books.filter(b => b.id !== req.params.id);
-        
+
         if (filteredBooks.length === initialLength) {
             return res.status(404).json({ message: 'Book not found' });
         }
-        
+
         data.books = filteredBooks;
         await writeData(BOOKS_FILE, data);
         res.json({ message: 'Book deleted successfully' });
@@ -195,7 +199,7 @@ app.post('/api/reviews', async (req, res) => {
             verified: false,
             ...req.body
         };
-        
+
         if (!newReview.bookId || !newReview.rating) {
             return res.status(400).json({ message: 'bookId and rating are required' });
         }
@@ -213,11 +217,11 @@ app.put('/api/reviews/:id', async (req, res) => {
     try {
         const data = await readData(REVIEWS_FILE);
         const index = data.reviews.findIndex(r => r.id === req.params.id);
-        
+
         if (index === -1) return res.status(404).json({ message: 'Review not found' });
-        
+
         data.reviews[index] = { ...data.reviews[index], ...req.body };
-        
+
         await writeData(REVIEWS_FILE, data);
         res.json(data.reviews[index]);
     } catch (err) {
@@ -230,11 +234,11 @@ app.delete('/api/reviews/:id', async (req, res) => {
     try {
         const data = await readData(REVIEWS_FILE);
         const filteredReviews = data.reviews.filter(r => r.id !== req.params.id);
-        
+
         if (filteredReviews.length === data.reviews.length) {
             return res.status(404).json({ message: 'Review not found' });
         }
-        
+
         data.reviews = filteredReviews;
         await writeData(REVIEWS_FILE, data);
         res.json({ message: 'Review deleted successfully' });

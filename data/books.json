@@ -77,20 +77,6 @@
       "reviewCount": 12,
       "inStock": false,
       "featured": false
-    },
-    {
-      "id": "4",
-      "title": "Intro to Algorithms",
-      "author": "Al-Khwarizmi",
-      "price": 120,
-      "inStock": true,
-      "featured": true,
-      "tags": [
-        "Math",
-        "CS"
-      ],
-      "publisher": "House of Wisdom",
-      "datePublished": "2025-11-21"
     }
   ]
 }

@@ -17,6 +17,10 @@ app.use(morgan('dev'));
 // JSON Parsing
 app.use(express.json());
 
+app.get('/', (req, res) => {
+    res.send('Welcome to the Bookstore API!')
+})
+
 // --- BONUS CHALLENGE: AUTHENTICATION MIDDLEWARE ---
 // This function acts as a guard. We will apply it ONLY to POST/PUT/DELETE routes.
 const authenticate = (req, res, next) => {

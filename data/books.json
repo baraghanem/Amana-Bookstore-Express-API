@@ -77,6 +77,12 @@
       "reviewCount": 12,
       "inStock": false,
       "featured": false
+    },
+    {
+      "id": "4",
+      "title": "Secure Book",
+      "author": "Admin User",
+      "price": 50
     }
   ]
 }
